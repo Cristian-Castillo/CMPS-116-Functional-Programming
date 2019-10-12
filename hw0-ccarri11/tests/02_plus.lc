@@ -1,0 +1,55 @@
+-------------------------------------------------------------------------------
+-- DO NOT MODIFY THIS SEGMENT
+-------------------------------------------------------------------------------
+
+let ZERO  = \f x -> x
+let ONE   = \f x -> f x
+let TWO   = \f x -> f (f x)
+let THREE = \f x -> f (f (f x))
+let FOUR  = \f x -> f (f (f (f x)))
+
+let SUC   = \n f x -> f (n f x)
+let ADD   = \n m -> n SUC m
+let MUL   = \n m -> n (ADD m) ZERO
+
+
+-------------------------------------------------------------------------------
+-- YOU SHOULD ONLY MODIFY THE TEXT BELOW, JUST THE PARTS MARKED AS COMMENTS
+-------------------------------------------------------------------------------
+eval suc_one :
+  SUC ONE
+  =d> (\n f x -> f (n f x)) (\f x -> f x)
+  =b> (\f x -> f ((\f x -> f x) f x))
+  =b> (\f x -> f ((\x -> f x) x))
+  =b> (\f x -> f (f x))
+  =d> TWO
+
+eval add_one_zero :
+  ADD ONE ZERO
+  =d> (\n m -> n SUC m) ONE ZERO
+  =b> ((\m -> ONE SUC m)(ZERO))
+  =b> (ONE SUC ZERO)
+  =d> ((\f x -> f x)(SUC)(ZERO))
+  =b> ((\x -> SUC x)(ZERO))
+  =b> (SUC ZERO)
+  =d> ((\n f x ->(f (n f x))) ZERO)
+  =b> (\f x -> (f (ZERO f x)))
+  =d> (\f x -> (f ((\f x -> x) (f) (x))))
+  =b> (\f x -> (f ((\x -> x)(x))))
+  =b> (\f x -> (f x))
+  =d> ONE
+
+eval add_one_two :
+  ADD ONE TWO 
+  =d> (\n m -> n SUC m) ONE TWO
+  =b> ((\m -> ONE SUC m)(TWO))
+  =b> (ONE SUC TWO)
+  =d> ((\f x -> f x)(SUC)(TWO))
+  =b> ((\x -> SUC x)(TWO))
+  =b> (SUC TWO)
+  =d> ((\n f x ->(f (n f x))) TWO)
+  =b> (\f x -> (f (TWO f x)))
+  =d> (\f x -> (f ( ( \f x -> (f (f x))) (f) (x))) )
+  =b> (\f x -> (f ( ( \x -> (f (f x))) (x) )))
+  =b> (\f x -> (f ( ( (f (f x))))))
+  =d> THREE
